@@ -52,4 +52,13 @@ public class FreeMarkerTest {
         // 生成文件后别忘了关闭哦
         out.close();
     }
+    @Test
+    public void test1(){
+        String projectPath = System.getProperty("user.dir");
+        File parentFile = new File(projectPath).getParentFile();
+        String inputPath = new File(parentFile, "xiong-generator-demo-projects/acm-template").getAbsolutePath();
+        System.out.println(projectPath);
+        System.out.println(inputPath);
+
+    }
 }

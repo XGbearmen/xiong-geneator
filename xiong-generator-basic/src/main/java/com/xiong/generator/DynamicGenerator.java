@@ -23,7 +23,7 @@ public class DynamicGenerator {
         String outputPath = projectPath + File.separator + "MainTemplate.java";
 //        System.out.println(outputPath);
         MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
-        mainTemplateConfig.setAuthor("yupi");
+        mainTemplateConfig.setAuthor("xiong");
         mainTemplateConfig.setLoop(false);
         mainTemplateConfig.setOutputText("求和结果：");
         doGenerate(inputPath, outputPath, mainTemplateConfig);
