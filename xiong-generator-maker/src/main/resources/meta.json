@@ -6,8 +6,9 @@
   "author": "xiong",
   "createTime": "2023-12-4",
   "fileConfig": {
-    "inputRootPath": "D:/javafile/SSMdemo/xiong-generator/xiong-generator-demo-projects/acm-template-pro",
+    "inputRootPath": ".source/acm-template-pro",
     "outputRootPath": "generated",
+    "sourceRootPath": "D:/javafile/SSMdemo/xiong-generator/xiong-generator-demo-projects/acm-template-pro",
     "type": "dir",
     "files": [
       {
@@ -43,7 +44,7 @@
         "fieldName": "author",
         "type": "String",
         "description": "作者注释",
-        "defaultValue": "yupi",
+        "defaultValue": "xiong",
         "abbr": "a"
       },
       {
