@@ -1,8 +1,5 @@
 package com.xiong.maker.generator.file;
-
-import com.xiong.maker.model.DataModel;
 import freemarker.template.TemplateException;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -33,11 +30,4 @@ public class FileGenerator {
         DynamicFileGenerator.doGenerate(inputDynamicFilePath, outputDynamicFilePath, model);
     }
 
-    public static void main(String[] args) throws TemplateException, IOException {
-        DataModel dataModel = new DataModel();
-        dataModel.setAuthor("xiong");
-        dataModel.setLoop(true);
-        dataModel.setOutputText("你的：");
-        doGenerate(dataModel);
-    }
 }
