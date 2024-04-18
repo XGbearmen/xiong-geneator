@@ -2,7 +2,9 @@
 .idea
 xiong-generator.iml
 xiong-generator-basic.iml
+application-local.yml
 .temp
+generated
 ### Java template
 # Compiled class file
 *.class
