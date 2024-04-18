@@ -27,6 +27,13 @@ export default [
       },
     ],
   },
+  {
+    path: '/test/file',
+    icon: 'home',
+    component: './Test/File',
+    name: '文件上传下载测试',
+    hideInMenu: true,
+  },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
 ];
