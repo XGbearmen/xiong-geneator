@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class MainGenerator extends GenerateTemplate{
     @Override
-    protected void bulidDist(String outputPath, String jarPath, String shellOutputFilePath, String sourceCopyDestPath) {
-
+    protected String bulidDist(String outputPath, String jarPath, String shellOutputFilePath, String sourceCopyDestPath) {
+        return "";
     }
 }

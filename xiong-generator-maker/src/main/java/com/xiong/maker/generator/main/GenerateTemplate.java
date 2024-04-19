@@ -3,6 +3,7 @@ package com.xiong.maker.generator.main;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import com.xiong.maker.generator.JarGenerator;
 import com.xiong.maker.generator.ScriptGenerator;
 import com.xiong.maker.generator.file.DynamicFileGenerator;
@@ -41,7 +42,7 @@ public abstract class GenerateTemplate {
      * @param jarPath
      * @param shellOutputFilePath
      */
-    protected void bulidDist(String outputPath, String jarPath, String shellOutputFilePath, String sourceCopyDestPath) {
+    protected String bulidDist(String outputPath, String jarPath, String shellOutputFilePath, String sourceCopyDestPath) {
         //生成精简版程序（产物包）
         String disOutPutPath= outputPath +"-dist";
         String targetAbsolutePath=disOutPutPath+File.separator+"target";
@@ -54,6 +55,7 @@ public abstract class GenerateTemplate {
         FileUtil.copy(shellOutputFilePath +".bat",disOutPutPath,true);
         //拷贝源模板文件
         FileUtil.copy(sourceCopyDestPath,disOutPutPath,true);
+        return disOutPutPath;
     }
 
     /**
@@ -175,5 +177,16 @@ public abstract class GenerateTemplate {
         String sourceCopyDestPath = outputPath +File.separator+".source";
         FileUtil.copy(sourceRootPath,sourceCopyDestPath,false);
         return sourceCopyDestPath;
+    }
+
+    /**
+     * 制作压缩包
+     * @param outputPath
+     * @return
+     */
+    protected String buildZip(String outputPath){
+        String zipPath=outputPath+".zip";
+        ZipUtil.zip(outputPath,zipPath);
+        return zipPath;
     }
 }
