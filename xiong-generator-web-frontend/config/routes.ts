@@ -54,6 +54,13 @@ export default [
     component: './Generator/Add',
     name: '创建生成器',
   },
+  {
+    path: '/generator/use/:id',
+    icon: 'home',
+    component: './Generator/Use',
+    name: '使用生成器',
+    hideInMenu: true,
+  },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
 ];
