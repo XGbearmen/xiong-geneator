@@ -3,6 +3,7 @@ package com.xiong.cli;
 import com.xiong.cli.command.GenerateCommand;
 import com.xiong.cli.command.ListCommand;
 import com.xiong.cli.command.ConfigCommand;
+import com.xiong.cli.command.JsonGenerateCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -18,7 +19,8 @@ public class CommandExecutor implements Runnable {
         commandLine = new CommandLine(this)
                 .addSubcommand(new GenerateCommand())
                 .addSubcommand(new ConfigCommand())
-                .addSubcommand(new ListCommand());
+                .addSubcommand(new ListCommand())
+                .addSubcommand(new JsonGenerateCommand());
     }
 
     @Override

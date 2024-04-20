@@ -19,6 +19,7 @@ public class CommandExecutor implements Runnable {
                 .addSubcommand(new GenerateCommand())
                 .addSubcommand(new ConfigCommand())
                 .addSubcommand(new ListCommand());
+                .addSubcommand(new JsonGenerateCommand());
     }
 
     @Override
