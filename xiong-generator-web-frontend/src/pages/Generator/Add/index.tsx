@@ -19,6 +19,7 @@ import { ProFormItem } from '@ant-design/pro-form';
 import { history } from '@umijs/max';
 import { message, UploadFile } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
+import ModelConfigForm from "@/pages/Generator/Add/components/ModelConfigForm";
 
 /**
  * 创建生成器页面
@@ -30,6 +31,10 @@ const GeneratorAddPage: React.FC = () => {
   const [oldData, setOldData] = useState<API.GeneratorEditRequest>();
   const formRef = useRef<ProFormInstance>();
 
+  // 记录表单已填数据
+  const [basicInfo, setBasicInfo] = useState<API.GeneratorEditRequest>();
+  const [modelConfig, setModelConfig] = useState<API.ModelConfig>();
+  const [fileConfig, setFileConfig] = useState<API.FileConfig>();
   /**
    * 加载数据
    */
@@ -158,7 +163,12 @@ const GeneratorAddPage: React.FC = () => {
           <StepsForm.StepForm
             name="modelConfig"
             title="模型配置"
+            onFinish={async (values) => {
+              setModelConfig(values);
+              return true;
+            }}
           >
+            <ModelConfigForm formRef={formRef} oldData={oldData} />
           </StepsForm.StepForm>
           <StepsForm.StepForm
             name="fileConfig"
