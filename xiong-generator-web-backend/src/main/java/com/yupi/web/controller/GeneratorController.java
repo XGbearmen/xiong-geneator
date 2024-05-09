@@ -1,6 +1,9 @@
 package com.yupi.web.controller;
 
+import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.json.JSONUtil;
@@ -8,6 +11,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.COSObjectInputStream;
 import com.qcloud.cos.utils.IOUtils;
+import com.xiong.maker.generator.main.GenerateTemplate;
+import com.xiong.maker.generator.main.ZipGenerator;
+import com.xiong.maker.meta.MetaValidator;
 import com.yupi.web.annotation.AuthCheck;
 import com.yupi.web.common.BaseResponse;
 import com.yupi.web.common.DeleteRequest;
@@ -17,7 +23,7 @@ import com.yupi.web.constant.UserConstant;
 import com.yupi.web.exception.BusinessException;
 import com.yupi.web.exception.ThrowUtils;
 import com.yupi.web.manager.CosManager;
-import com.yupi.web.meta.Meta;
+import com.xiong.maker.meta.Meta;
 import com.yupi.web.model.dto.generator.*;
 import com.yupi.web.model.entity.Generator;
 import com.yupi.web.model.entity.User;
@@ -33,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
@@ -396,5 +403,66 @@ public class GeneratorController {
         CompletableFuture.runAsync(() -> {
             FileUtil.del(tempDirPath);
         });
+    }
+
+    @PostMapping("/make")
+    public void makeGenerator(@RequestBody GeneratorMakeRequest generatorMakeRequest,HttpServletRequest request,HttpServletResponse response) throws IOException {
+        String zipFilePath = generatorMakeRequest.getZipFilePath();
+        Meta meta = generatorMakeRequest.getMeta();
+        User loginUser = userService.getLoginUser(request);
+        if (StrUtil.isBlank(zipFilePath)){
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR,"压缩包不存在");
+        }
+        String propertyPath = System.getProperty("user.dir");
+        String id=IdUtil.getSnowflakeNextId()+ RandomUtil.randomString(6);
+        String tempDirPath = String.format("%s/.temp/make/%s", propertyPath, id);
+
+        //新建文件
+        String LocalZipFilePath = tempDirPath + "/project.zip";
+        if (!FileUtil.exist(LocalZipFilePath)) {
+            FileUtil.touch(LocalZipFilePath);
+        }
+
+        //下载文件
+        try {
+            cosManager.download(zipFilePath, LocalZipFilePath);
+        } catch (InterruptedException e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成器下载失败");
+        }
+
+        //解压文件
+        File unzip = ZipUtil.unzip(LocalZipFilePath);
+
+        // 构造 meta 对象和生成器的输出路径
+        String absolutePath = unzip.getAbsolutePath();
+        meta.getFileConfig().setSourceRootPath(absolutePath);
+        MetaValidator.doValidAndFill(meta);
+        String outputPath = String.format("%s/generated/%s", tempDirPath, meta.getName());
+
+        // 5）调用 maker 方法制作生成器
+        GenerateTemplate generateTemplate = new ZipGenerator();
+        try {
+            generateTemplate.doGenerator(meta,outputPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "制作失败");
+        }
+
+        // 下载制作好的生成器压缩包
+        String suffix = "-dist.zip";
+        String zipFileName = meta.getName() + suffix;
+        // 生成器压缩包的绝对路径
+        String distZipFilePath = outputPath +suffix;
+
+        // 设置响应头
+        response.setContentType("application/octet-stream;charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=" + zipFileName);
+        Files.copy(Paths.get(distZipFilePath), response.getOutputStream());
+
+        // 7）清理工作空间的文件
+        CompletableFuture.runAsync(() -> {
+            FileUtil.del(tempDirPath);
+        });
+
     }
 }

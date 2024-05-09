@@ -2,7 +2,7 @@ package com.yupi.web.model.dto.generator;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.yupi.web.meta.Meta;
+import com.xiong.maker.meta.Meta;
 import lombok.Data;
 
 import java.io.Serializable;

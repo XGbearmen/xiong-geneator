@@ -21,6 +21,10 @@ public abstract class GenerateTemplate {
         // 输出根路径
         String projectPath = System.getProperty("user.dir");
         String outputPath = projectPath + File.separator + "generated" + File.separator + meta.getName();
+       doGenerator(meta,outputPath);
+    }
+
+    public void doGenerator(Meta meta,String outputPath) throws TemplateException, IOException, InterruptedException {
         if (!FileUtil.exist(outputPath)) {
             FileUtil.mkdir(outputPath);
         }
@@ -34,7 +38,6 @@ public abstract class GenerateTemplate {
 
         bulidDist(outputPath, jarPath, shellOutputFilePath, sourceCopyDestPath);
     }
-
     /**
      * 生成精简版程序
      * @param outputPath
@@ -97,8 +100,7 @@ public abstract class GenerateTemplate {
      */
     protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
         // 读取 resources 目录
-        ClassPathResource classPathResource = new ClassPathResource("");
-        String inputResourcePath = classPathResource.getAbsolutePath();
+        String inputResourcePath = "";
 
         // Java 包基础路径
         String outputBasePackage = meta.getBasePackage();
